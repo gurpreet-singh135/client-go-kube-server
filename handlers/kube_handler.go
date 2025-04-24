@@ -33,7 +33,7 @@ func Create_handlers(clientset *kubernetes.Clientset, namespace string, concurre
 	})
 	
 	e.GET("/jobs/pending", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World! /jobs")
+		return getPendingJobs(c, *kubernetes_client)
 	})
 
 	e.GET("/jobs/running", func(c echo.Context) error {
@@ -111,4 +111,9 @@ func createJobFromFileHandler(c echo.Context, kubernetes_client *service.Kuberne
 
 	fmt.Printf("Job created from file: %s/%s", job.Namespace, job.Name)
 	return c.JSON(http.StatusCreated, job)
+}
+
+func getPendingJobs(c echo.Context, kubernetes_client service.KubernetesClient) error {
+	jobList := kubernetes_client.GetPendingJobs()
+	return c.JSON(http.StatusCreated, jobList)
 }

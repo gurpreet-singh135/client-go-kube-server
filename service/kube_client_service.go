@@ -66,3 +66,12 @@ func (client *KubernetesClient) receiver() {
 		fmt.Println(response)
 	}
 }
+
+func (client *KubernetesClient) GetPendingJobs() []*model.CustomJob{
+	pq := client.queue.pq
+	jobs := make([]*model.CustomJob, 0)
+	for _, job := range pq {
+		jobs = append(jobs, job)
+	}
+	return jobs
+}
